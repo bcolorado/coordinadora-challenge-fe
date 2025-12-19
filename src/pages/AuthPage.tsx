@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import styles from "./AuthPage.module.css";
+import {
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+  Container,
+  Box,
+} from "@mui/material";
 
 export const AuthPage = () => {
   const [email, setEmail] = useState("");
@@ -17,49 +25,66 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.card}>
-        <h2 className={styles.title}>Login</h2>
-        <p className={styles.description}>
-          Enter your credentials to access the platform.
-        </p>
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <Card>
+        <CardContent sx={{ p: 4 }}>
+          <Typography component="h1" variant="h5" align="center" gutterBottom>
+            Login
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            align="center"
+            sx={{ mb: 3 }}
+          >
+            Enter your credentials to access the platform.
+          </Typography>
 
-        <form onSubmit={handleLogin}>
-          <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="email">
-              Email
-            </label>
-            <input
+          <Box component="form" onSubmit={handleLogin} noValidate>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
               id="email"
-              type="email"
-              className={styles.input}
-              placeholder="user@example.com"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
               type="password"
-              className={styles.input}
-              placeholder="••••••••"
+              id="password"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
-          </div>
-
-          <button type="submit" className={styles.button}>
-            Sign In
-          </button>
-        </form>
-      </div>
-    </div>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
