@@ -1,5 +1,12 @@
 import { Navigate, Outlet } from "react-router";
-import styles from "./ProtectedLayout.module.css";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Container,
+  Box,
+} from "@mui/material";
 
 export const ProtectedLayout = () => {
   const isAuthenticated = localStorage.getItem("auth") === "true";
@@ -9,22 +16,26 @@ export const ProtectedLayout = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <h3>Shipping Platform</h3>
-        <button
-          className={styles.button}
-          onClick={() => {
-            localStorage.removeItem("auth");
-            window.location.href = "/";
-          }}
-        >
-          Logout
-        </button>
-      </header>
-      <main>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Shipping Platform
+          </Typography>
+          <Button
+            color="inherit"
+            onClick={() => {
+              localStorage.removeItem("auth");
+              window.location.href = "/";
+            }}
+          >
+            Logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Container sx={{ mt: 4 }}>
         <Outlet />
-      </main>
-    </div>
+      </Container>
+    </Box>
   );
 };

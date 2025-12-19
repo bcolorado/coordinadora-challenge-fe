@@ -1,12 +1,16 @@
-import styles from "./DashboardPage.module.css";
+import { Card, CardContent, Typography } from "@mui/material";
 
 export const DashboardPage = () => {
   return (
-    <div className={styles.card}>
-      <h2>Welcome to the Dashboard</h2>
-      <p>
-        This is a protected area. You can only see this if you are logged in.
-      </p>
-    </div>
+    <Card>
+      <CardContent>
+        <Typography variant="h5" component="div" gutterBottom>
+          Welcome to the Dashboard
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          This is a protected area. You can only see this if you are logged in.
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
