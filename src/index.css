@@ -56,3 +56,8 @@ h6 {
   color: var(--foreground);
   margin-top: 0;
 }
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
