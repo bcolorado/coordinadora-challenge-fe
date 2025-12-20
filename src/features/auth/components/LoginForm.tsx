@@ -19,6 +19,8 @@ import type {
   LoginResponseDto,
 } from "@/features/auth/types/auth.types";
 import type { ApiResponse } from "@/types/api";
+import { useAppDispatch } from "@/hooks/redux";
+import { setCredentials } from "@/features/auth/authSlice";
 
 const loginSchema = z.object({
   email: z.string().email("Por favor ingresa un correo electronico valido"),
@@ -31,7 +33,12 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [localError, setLocalError] = useState<string | null>(null);
-  const { post, loading, error: apiError } = useApi();
+  const {
+    post,
+    loading,
+    error: apiError,
+  } = useApi<ApiResponse<LoginResponseDto>>();
+  const dispatch = useAppDispatch();
 
   const handleLogin = async (data: LoginFormData) => {
     setLocalError(null);
@@ -50,6 +57,14 @@ export const LoginForm = () => {
         localStorage.setItem("auth", "true");
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        dispatch(
+          setCredentials({
+            user: response.data.user,
+            token: response.data.token,
+          })
+        );
+
         navigate("/dashboard");
       } else if (response.error) {
         setLocalError(response.error.message);
