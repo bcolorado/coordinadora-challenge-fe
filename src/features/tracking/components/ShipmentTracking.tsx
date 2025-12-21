@@ -27,7 +27,6 @@ import {
   ArrowBack,
   Place,
   Inventory,
-  AttachMoney,
 } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import { useApi } from "@/hooks/useApi";

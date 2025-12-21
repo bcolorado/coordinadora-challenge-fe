@@ -3,11 +3,11 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "rgba(11, 107, 203, 1)", // Professional Blue
+      main: "rgba(11, 107, 203, 1)",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "rgba(234, 239, 245, 1)", // Light Blue Secondary
+      main: "rgba(234, 239, 245, 1)",
       contrastText: "rgba(48, 61, 79, 1)",
     },
     error: {
