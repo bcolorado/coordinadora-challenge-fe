@@ -1,14 +1,25 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { QuoteResponseDto } from "./types/quote.types";
 
+interface QuoteFormData {
+  weight: number;
+  length: number;
+  width: number;
+  height: number;
+  originId: string;
+  destinationId: string;
+}
+
 interface QuoteState {
   currentQuote: QuoteResponseDto | null;
+  formData: QuoteFormData | null;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: QuoteState = {
   currentQuote: null,
+  formData: null,
   isLoading: false,
   error: null,
 };
@@ -30,13 +41,22 @@ const quoteSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
+    setFormData: (state, action: PayloadAction<QuoteFormData>) => {
+      state.formData = action.payload;
+    },
     clearQuote: (state) => {
       state.currentQuote = null;
+      state.formData = null;
       state.error = null;
     },
   },
 });
 
-export const { quoteStart, quoteSuccess, quoteFailure, clearQuote } =
-  quoteSlice.actions;
+export const {
+  quoteStart,
+  quoteSuccess,
+  quoteFailure,
+  setFormData,
+  clearQuote,
+} = quoteSlice.actions;
 export default quoteSlice.reducer;
