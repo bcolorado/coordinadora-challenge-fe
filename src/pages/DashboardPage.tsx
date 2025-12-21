@@ -53,54 +53,9 @@ const QuickActionCard = ({
   </Card>
 );
 
-const StatCard = ({
-  icon,
-  value,
-  label,
-  color,
-}: {
-  icon: React.ReactNode;
-  value: number;
-  label: string;
-  color: string;
-}) => (
-  <Paper sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
-    <Box
-      sx={{
-        width: 48,
-        height: 48,
-        borderRadius: 2,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: `${color}.light`,
-        color: `${color}.main`,
-      }}
-    >
-      {icon}
-    </Box>
-    <Box>
-      <Typography variant="h4" fontWeight="bold">
-        {value}
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        {label}
-      </Typography>
-    </Box>
-  </Paper>
-);
-
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
-
-  // Placeholder stats (will be connected to shipments feature later)
-  const stats = {
-    total: 0,
-    pending: 0,
-    inTransit: 0,
-    delivered: 0,
-  };
 
   return (
     <Box>
@@ -134,69 +89,22 @@ export const DashboardPage = () => {
         </Button>
       </Box>
 
-      {/* Stats */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 6, md: 3 }}>
-          <StatCard
-            icon={<LocalShipping />}
-            value={stats.total}
-            label="Total Envíos"
-            color="primary"
-          />
-        </Grid>
-        <Grid size={{ xs: 6, md: 3 }}>
-          <StatCard
-            icon={<Pending />}
-            value={stats.pending}
-            label="Pendientes"
-            color="warning"
-          />
-        </Grid>
-        <Grid size={{ xs: 6, md: 3 }}>
-          <StatCard
-            icon={<TrendingUp />}
-            value={stats.inTransit}
-            label="En Tránsito"
-            color="info"
-          />
-        </Grid>
-        <Grid size={{ xs: 6, md: 3 }}>
-          <StatCard
-            icon={<CheckCircle />}
-            value={stats.delivered}
-            label="Entregados"
-            color="success"
-          />
-        </Grid>
-      </Grid>
-
       {/* Quick Actions */}
-      <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
-        Acciones Rápidas
-      </Typography>
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, sm: 4 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <QuickActionCard
             icon={<Calculate sx={{ fontSize: 48 }} />}
-            title="Cotizar Envío"
-            description="Calcula el costo de envío de tu paquete"
+            title="Cotizar y crear Envío"
+            description="Calcula el costo y crea el envío de tu paquete"
             onClick={() => navigate("/quote")}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
           <QuickActionCard
             icon={<LocalShipping sx={{ fontSize: 48 }} />}
             title="Mis Envíos"
             description="Ver y gestionar todos tus envíos"
             onClick={() => navigate("/shipments")}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <QuickActionCard
-            icon={<TrackChanges sx={{ fontSize: 48 }} />}
-            title="Rastrear Paquete"
-            description="Rastrea tu envío en tiempo real"
-            onClick={() => navigate("/tracking")}
           />
         </Grid>
       </Grid>

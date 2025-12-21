@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import { MemoryRouter } from "react-router";
 import authReducer from "@/features/auth/authSlice";
+import quoteReducer from "@/features/quote/quoteSlice";
 import type { RootState } from "@/store";
 
 type DeepPartial<T> = {
@@ -19,7 +20,7 @@ export function renderWithProviders(
   { preloadedState, ...renderOptions }: ExtendedRenderOptions = {}
 ) {
   const store = configureStore({
-    reducer: { auth: authReducer },
+    reducer: { auth: authReducer, quote: quoteReducer },
     preloadedState: preloadedState as RootState,
   });
 

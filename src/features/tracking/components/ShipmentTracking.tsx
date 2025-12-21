@@ -25,7 +25,10 @@ import {
   CheckCircle,
   History,
   ArrowBack,
+  Place,
+  Inventory,
 } from "@mui/icons-material";
+import Grid from "@mui/material/Grid";
 import { useApi } from "@/hooks/useApi";
 import { useShipmentSocket } from "../hooks/useShipmentSocket";
 import type {
@@ -34,13 +37,20 @@ import type {
   StatusHistoryItem,
 } from "../types/tracking.types";
 import type { ApiResponse } from "@/types/api";
+import { formatCOP } from "@/utils/currency-formater";
+
+const formatColombiaDate = (dateString: string) => {
+  const date = new Date(dateString);
+  date.setHours(date.getHours() - 5);
+  return date.toLocaleString("es-CO");
+};
 
 const STATUS_STEPS = ["EN_ESPERA", "EN_TRANSITO", "ENTREGADO"];
 
 const getStatusLabel = (status: string) => {
   switch (status) {
     case "EN_ESPERA":
-      return "Pendiente";
+      return "En Espera";
     case "EN_TRANSITO":
       return "En Tránsito";
     case "ENTREGADO":
@@ -50,16 +60,44 @@ const getStatusLabel = (status: string) => {
   }
 };
 
-const getStatusColor = (status: string) => {
+const getStatusIcon = (status: string) => {
   switch (status) {
     case "EN_ESPERA":
-      return "warning";
+      return <Schedule sx={{ fontSize: 16 }} />;
     case "EN_TRANSITO":
-      return "info";
+      return <LocalShipping sx={{ fontSize: 16 }} />;
     case "ENTREGADO":
-      return "success";
+      return <CheckCircle sx={{ fontSize: 16 }} />;
     default:
-      return "default";
+      return undefined;
+  }
+};
+
+const getStatusStyles = (status: string) => {
+  switch (status) {
+    case "EN_ESPERA":
+      return {
+        background: "linear-gradient(135deg, #ff9800 0%, #ffc107 100%)",
+        color: "white",
+        boxShadow: "0 2px 8px rgba(255, 152, 0, 0.3)",
+      };
+    case "EN_TRANSITO":
+      return {
+        background: "linear-gradient(135deg, #2196f3 0%, #03a9f4 100%)",
+        color: "white",
+        boxShadow: "0 2px 8px rgba(33, 150, 243, 0.3)",
+      };
+    case "ENTREGADO":
+      return {
+        background: "linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)",
+        color: "white",
+        boxShadow: "0 2px 8px rgba(76, 175, 80, 0.3)",
+      };
+    default:
+      return {
+        background: "grey.200",
+        color: "text.primary",
+      };
   }
 };
 
@@ -190,14 +228,81 @@ export const ShipmentTracking = () => {
               </Typography>
             </Box>
             <Chip
+              icon={getStatusIcon(trackingData.currentStatus)}
               label={getStatusLabel(trackingData.currentStatus)}
-              color={getStatusColor(trackingData.currentStatus) as any}
               size="medium"
-              sx={{ fontWeight: 600, px: 2, py: 2.5 }}
+              sx={{
+                fontWeight: 600,
+                px: 2,
+                py: 2.5,
+                fontSize: "0.95rem",
+                "& .MuiChip-icon": { color: "white" },
+                ...getStatusStyles(trackingData.currentStatus),
+              }}
             />
           </Box>
         </CardContent>
       </Card>
+
+      {/* Package Details */}
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+        >
+          <Inventory color="primary" /> Detalles del Paquete
+        </Typography>
+        <Divider sx={{ my: 2 }} />
+        <Grid container spacing={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+              <Place color="success" />
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  Origen
+                </Typography>
+                <Typography fontWeight="600">
+                  {trackingData.origin.cityName}
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 3 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Place color="error" />
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  Destino
+                </Typography>
+                <Typography fontWeight="600">
+                  {trackingData.destination.cityName}
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 3 }}>
+            <Typography variant="body2" color="text.secondary">
+              Peso Cobrado
+            </Typography>
+            <Typography fontWeight="600">
+              {trackingData.chargeableWeightKg} kg
+            </Typography>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 3 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box>
+                <Typography variant="body2" color="text.secondary">
+                  Precio Total
+                </Typography>
+                <Typography variant="h6" fontWeight="bold" color="primary">
+                  {formatCOP(trackingData.quotedPriceCents)}
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
 
       {/* Status Stepper */}
       <Paper sx={{ p: 3, mb: 3 }}>
@@ -264,14 +369,21 @@ export const ShipmentTracking = () => {
               >
                 <ListItemIcon>
                   <Chip
+                    icon={getStatusIcon(item.status)}
                     label={getStatusLabel(item.status)}
-                    color={getStatusColor(item.status) as any}
                     size="small"
+                    sx={{
+                      fontWeight: 500,
+                      minWidth: 110,
+                      marginRight: 2,
+                      "& .MuiChip-icon": { color: "white" },
+                      ...getStatusStyles(item.status),
+                    }}
                   />
                 </ListItemIcon>
                 <ListItemText
                   primary={item.note || getStatusLabel(item.status)}
-                  secondary={new Date(item.occurredAt).toLocaleString("es-CO")}
+                  secondary={formatColombiaDate(item.occurredAt)}
                 />
               </ListItem>
             ))}
