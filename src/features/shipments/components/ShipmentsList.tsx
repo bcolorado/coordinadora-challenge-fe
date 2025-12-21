@@ -23,7 +23,7 @@ import type { ApiResponse } from "@/types/api";
 import { formatCOP } from "@/utils/currency-formater";
 
 const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
+  switch (status.toUpperCase()) {
     case "EN_ESPERA":
       return "warning";
     case "EN_TRASITO":
@@ -38,10 +38,10 @@ const getStatusColor = (status: string) => {
 };
 
 const getStatusLabel = (status: string) => {
-  switch (status.toLowerCase()) {
+  switch (status.toUpperCase()) {
     case "EN_ESPERA":
-      return "Pendiente";
-    case "EN_TRASITO":
+      return "En Espera";
+    case "EN_TRANSITO":
       return "En Tránsito";
     case "ENTREGADO":
       return "Entregado";
@@ -50,6 +50,12 @@ const getStatusLabel = (status: string) => {
     default:
       return status;
   }
+};
+
+const formatColombiaDate = (dateString: string) => {
+  const date = new Date(dateString);
+  date.setHours(date.getHours() - 5);
+  return date.toLocaleString("es-CO");
 };
 
 export const ShipmentsList = () => {
@@ -142,6 +148,7 @@ export const ShipmentsList = () => {
               </TableCell>
               <TableCell>
                 <Chip
+                  variant="outlined"
                   label={getStatusLabel(shipment.status)}
                   color={getStatusColor(shipment.status) as any}
                   size="small"
@@ -153,9 +160,7 @@ export const ShipmentsList = () => {
               <TableCell align="right">
                 {formatCOP(shipment.quotedPriceCents)}
               </TableCell>
-              <TableCell>
-                {new Date(shipment.createdAt).toLocaleDateString("es-CO")}
-              </TableCell>
+              <TableCell>{formatColombiaDate(shipment.createdAt)}</TableCell>
               <TableCell align="center">
                 <IconButton
                   color="primary"
