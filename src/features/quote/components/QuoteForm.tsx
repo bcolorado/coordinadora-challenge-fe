@@ -20,7 +20,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useApi } from "@/hooks/useApi";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { quoteStart, quoteSuccess, quoteFailure } from "../quoteSlice";
+import {
+  quoteStart,
+  quoteSuccess,
+  quoteFailure,
+  setFormData,
+} from "../quoteSlice";
 import type {
   QuoteResponseDto,
   LocationResponseDto,
@@ -43,7 +48,7 @@ type QuoteFormOutput = z.output<typeof quoteSchema>;
 export const QuoteForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { currentQuote, isLoading, error } = useAppSelector(
+  const { currentQuote, formData, isLoading, error } = useAppSelector(
     (state) => state.quote
   );
   const { post, get } = useApi<ApiResponse<QuoteResponseDto>>();
@@ -80,7 +85,7 @@ export const QuoteForm = () => {
     formState: { errors },
   } = useForm<QuoteFormInput, unknown, QuoteFormOutput>({
     resolver: zodResolver(quoteSchema),
-    defaultValues: {
+    defaultValues: formData ?? {
       weight: 1,
       length: 10,
       width: 10,
@@ -91,6 +96,18 @@ export const QuoteForm = () => {
   });
 
   const onSubmit = async (data: QuoteFormOutput) => {
+    // Save form data to Redux for persistence
+    dispatch(
+      setFormData({
+        weight: data.weight,
+        length: data.length,
+        width: data.width,
+        height: data.height,
+        originId: data.originId,
+        destinationId: data.destinationId,
+      })
+    );
+
     dispatch(quoteStart());
     try {
       const result = await post("/quotes", {
