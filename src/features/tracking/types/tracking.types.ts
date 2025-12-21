@@ -4,10 +4,20 @@ export interface StatusHistoryItem {
   note: string | null;
 }
 
+export interface LocationInfo {
+  id: number;
+  cityName: string;
+}
+
 export interface ShipmentTrackingDto {
   id: number;
   trackingNumber: string;
   currentStatus: string;
+  origin: LocationInfo;
+  destination: LocationInfo;
+  actualWeightKg: number;
+  chargeableWeightKg: number;
+  quotedPriceCents: number;
   history: StatusHistoryItem[];
 }
 
