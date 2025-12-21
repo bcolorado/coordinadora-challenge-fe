@@ -2,6 +2,9 @@ import { Routes, Route } from "react-router";
 import { AuthPage } from "./pages/AuthPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { QuotePage } from "./pages/QuotePage";
+import { ShipmentNewPage } from "./pages/ShipmentNewPage";
+import { ShipmentsPage } from "./pages/ShipmentsPage";
+import { TrackingPage } from "./pages/TrackingPage";
 import { ProtectedLayout } from "./components/layout/ProtectedLayout";
 import "./App.css";
 
@@ -12,6 +15,9 @@ function App() {
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/quote" element={<QuotePage />} />
+        <Route path="/shipments" element={<ShipmentsPage />} />
+        <Route path="/shipments/new" element={<ShipmentNewPage />} />
+        <Route path="/tracking/:trackingNumber" element={<TrackingPage />} />
       </Route>
     </Routes>
   );
