@@ -54,7 +54,6 @@ const getStatusLabel = (status: string) => {
 
 const formatColombiaDate = (dateString: string) => {
   const date = new Date(dateString);
-  date.setHours(date.getHours() - 5);
   return date.toLocaleString("es-CO");
 };
 
